@@ -12,6 +12,7 @@ libraryDependencies ++= {
   Seq(
     "com.github.emartech" % "rdb-connector-common"  % "-SNAPSHOT" changing(),
     "org.scalatest"       %% "scalatest"            % scalaTestV,
+    "com.typesafe.akka"   %% "akka-stream-testkit"  % "2.5.6"   % Test,
     "org.mockito"         %  "mockito-core"         % "2.11.0"  % Test
   )
 }
