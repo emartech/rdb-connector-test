@@ -64,7 +64,7 @@ trait SimpleSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterA
 
   def checkResultWithoutRowOrder(result: Seq[Seq[String]], expected: Seq[Seq[String]]): Unit = {
     result.size shouldEqual expected.size
-    result.head shouldEqual expected.head
+    result.head.map(_.toUpperCase) shouldEqual expected.head.map(_.toUpperCase)
     result.foreach(expected contains _)
   }
 
@@ -137,7 +137,7 @@ trait SimpleSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterA
         val result = getSimpleSelectResult(simpleSelect)
 
         result.size shouldEqual 3
-        result.head shouldEqual Seq("A1", "A2", "A3")
+        result.head.map(_.toUpperCase) shouldEqual Seq("A1", "A2", "A3").map(_.toUpperCase)
       }
     }
 
