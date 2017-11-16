@@ -225,9 +225,7 @@ trait SimpleSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterA
 
         val result = getSimpleSelectResult(simpleSelect)
 
-        checkResultWithoutRowOrder(result, Seq(
-          Seq("A1", "A2", "A3")
-        ))
+        result shouldEqual Seq.empty
       }
 
       "list table values with OR + AND" in {
