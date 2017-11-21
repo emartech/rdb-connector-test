@@ -3,10 +3,11 @@ package com.emarsys.rdb.connector.test
 import java.util.UUID
 
 import com.emarsys.rdb.connector.common.models.Connector
+import com.emarsys.rdb.connector.common.models.Errors.TableNotFound
 import com.emarsys.rdb.connector.common.models.TableSchemaDescriptors.{FieldModel, FullTableModel, TableModel}
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
-import scala.concurrent.duration._
 
+import scala.concurrent.duration._
 import scala.concurrent.Await
 
 /*
@@ -59,6 +60,11 @@ trait MetadataItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
         val fieldModels = result.map(f => f.copy(name = f.name.toLowerCase, columnType = "")).sortBy(_.name)
 
         fieldModels shouldBe tableFields
+      }
+
+      "failed if table not found" in {
+        val result = Await.result(connector.listFields("TABLENAME"), awaitTimeout)
+        result shouldBe Left(TableNotFound("TABLENAME"))
       }
     }
 
