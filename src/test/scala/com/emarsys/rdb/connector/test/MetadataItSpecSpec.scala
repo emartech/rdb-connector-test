@@ -14,7 +14,7 @@ class MetadataItSpecSpec extends MetadataItSpec with MockitoSugar{
   //table list not exact matches
   //works as expected
 
-  implicit val ec = scala.concurrent.ExecutionContext.global
+  implicit val executionContext = scala.concurrent.ExecutionContext.global
 
   override val connector = mock[Connector]
 

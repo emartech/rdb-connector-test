@@ -16,7 +16,7 @@ class SimpleSelectItSpecSpec extends TestKit(ActorSystem()) with SimpleSelectItS
 
   implicit val materializer: Materializer = ActorMaterializer()
 
-  implicit val ec = system.dispatcher
+  implicit val executionContext = system.dispatcher
 
   override val connector = mock[Connector]
 
