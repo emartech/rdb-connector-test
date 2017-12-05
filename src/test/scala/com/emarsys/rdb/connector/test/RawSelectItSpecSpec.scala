@@ -77,13 +77,4 @@ class RawSelectItSpecSpec extends TestKit(ActorSystem()) with RawSelectItSpec wi
     Seq("v7")
   ).to[scala.collection.immutable.Seq]))))
 
-
-  when(connector.analyzeRawSelect(simpleSelect)).thenReturn(Future(Right(Source(Seq(
-    Seq("QUERY PLAN"),
-    Seq(s"""XN Seq Scan on "$aTableName"  (cost=0.00..0.07 rows=7 width=405)"""),
-    Seq(s"----- Tables missing statistics: $aTableName -----"),
-    Seq("----- Update statistics by running the ANALYZE command on these tables -----")
-  ).to[scala.collection.immutable.Seq]))))
-
-
 }
