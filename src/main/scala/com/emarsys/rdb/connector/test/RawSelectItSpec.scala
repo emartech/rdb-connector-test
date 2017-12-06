@@ -13,6 +13,10 @@ import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
 import scala.concurrent.{Await, ExecutionContextExecutor}
 import scala.concurrent.duration._
 
+/*
+For positive results use the A and B table definitions and preloaded data defined in the SimpleSelect.
+*/
+
 trait RawSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
 
   implicit val executionContext: ExecutionContextExecutor

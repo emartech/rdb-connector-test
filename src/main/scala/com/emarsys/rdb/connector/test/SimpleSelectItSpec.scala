@@ -20,6 +20,9 @@ Tables:
 A(A1: string, A2: ?int, A3: ?boolean)
 B(B1: string, B2: string, B3: string, B4: ?string)
 
+(We will reuse these table definitions with these data.
+If you want to reuse them too and your DB has indexes add index to A3 pls.)
+
 Sample data:
 A:
   ("v1", 1, true)
