@@ -54,10 +54,6 @@ trait InsertItSpec extends WordSpecLike with Matchers with BeforeAndAfterEach wi
     where = Some(
       EqualToValue(FieldName("A1"), Value("v3new"))
     ))
-  val simpleSelectExisting = SimpleSelect(AllField, TableName(tableName),
-    where = Some(
-      EqualToValue(FieldName("A1"), Value("v1"))
-    ))
   val simpleSelectN = SimpleSelect(AllField, TableName(tableName),
     where = Some(
       EqualToValue(FieldName("A1"), Value("vn"))
@@ -117,20 +113,13 @@ trait InsertItSpec extends WordSpecLike with Matchers with BeforeAndAfterEach wi
 
       }
 
-      "ignore if inserting existing record" in {
-        Await.result(connector.insertIgnore(tableName, insertExistingData), awaitTimeout) shouldBe Right(0)
-        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(8)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(8)
-        Await.result(connector.simpleSelect(simpleSelectExisting), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
-
-      }
-
       "successfully insert NULL values" in {
         Await.result(connector.insertIgnore(tableName, insertNullData), awaitTimeout) shouldBe Right(1)
         Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(9)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(9)
         Await.result(connector.simpleSelect(simpleSelectN), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
       }
 
-      "if all compulsory fields are defined, fill undefined values with NULL" in {
+      "successfully insert if all compulsory fields are defined, fill undefined values with NULL" in {
         Await.result(connector.insertIgnore(tableName, insertFieldDataWithMissingFields), awaitTimeout) shouldBe Right(2)
         Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(10)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(10)
         Await.result(connector.simpleSelect(simpleSelectIsNull), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
@@ -139,7 +128,7 @@ trait InsertItSpec extends WordSpecLike with Matchers with BeforeAndAfterEach wi
     }
   }
 
-  private def simpleSelectAllWithExpectedResultSize(number: Int) = SimpleSelect(AllField, TableName(tableName),
+  protected def simpleSelectAllWithExpectedResultSize(number: Int) = SimpleSelect(AllField, TableName(tableName),
     where = Some(
       Or(Seq(EqualToValue(FieldName("A1"), Value(number.toString)), NotNull(FieldName("A1"))))))
 

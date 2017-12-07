@@ -47,7 +47,7 @@ class InsertIgnoreItSpecSpec extends TestKit(ActorSystem()) with InsertItSpec wi
   ))).thenReturn(Future(Right(Source(List(Seq("columnName"), Seq("vref1","vref1"))))))
 
 
-  Seq(simpleSelectExisting,
+  Seq(
     simpleSelectF,
     simpleSelectT,
     simpleSelectT2,
@@ -56,6 +56,6 @@ class InsertIgnoreItSpecSpec extends TestKit(ActorSystem()) with InsertItSpec wi
     simpleSelectIsNull
   ).foreach(selectUniqueValueMock(_, connector))
 
-  Seq(11, 9, 8).foreach(selectExactNumberMock(_, tableName, connector))
+  Seq(11, 10, 9, 8).foreach(selectExactNumberMock(_, tableName, connector))
 
 }
