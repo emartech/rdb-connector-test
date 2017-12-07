@@ -10,12 +10,12 @@ import com.emarsys.rdb.connector.common.models.Errors.FailedValidation
 import com.emarsys.rdb.connector.common.models.SimpleSelect._
 import com.emarsys.rdb.connector.common.models.ValidateDataManipulation.ValidationResult.NonExistingFields
 import com.emarsys.rdb.connector.common.models.{Connector, SimpleSelect}
-import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
+import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Matchers, WordSpecLike}
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
-trait ReplaceItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
+trait ReplaceItSpec extends WordSpecLike with Matchers with BeforeAndAfterEach with BeforeAndAfterAll {
   val connector: Connector
   def initDb(): Unit
   def cleanUpDb(): Unit
@@ -26,12 +26,15 @@ trait ReplaceItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
 
   val awaitTimeout = 5.seconds
 
-  override def beforeAll(): Unit = {
+  override def beforeEach(): Unit = {
     initDb()
   }
 
-  override def afterAll(): Unit = {
+  override def afterEach(): Unit = {
     cleanUpDb()
+  }
+
+  override def afterAll(): Unit = {
     connector.close()
   }
 

@@ -10,12 +10,12 @@ import com.emarsys.rdb.connector.common.models.Errors.FailedValidation
 import com.emarsys.rdb.connector.common.models.SimpleSelect._
 import com.emarsys.rdb.connector.common.models.ValidateDataManipulation.ValidationResult.NonExistingFields
 import com.emarsys.rdb.connector.common.models.{Connector, SimpleSelect}
-import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
+import org.scalatest._
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
-trait InsertItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
+trait InsertItSpec extends WordSpecLike with Matchers with BeforeAndAfterEach with BeforeAndAfterAll {
   val connector: Connector
   def initDb(): Unit
   def cleanUpDb(): Unit
@@ -26,12 +26,15 @@ trait InsertItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
 
   val awaitTimeout = 5.seconds
 
-  override def beforeAll(): Unit = {
+  override def beforeEach(): Unit = {
     initDb()
   }
 
-  override def afterAll(): Unit = {
+  override def afterEach(): Unit = {
     cleanUpDb()
+  }
+
+  override def afterAll(): Unit = {
     connector.close()
   }
 
@@ -129,7 +132,7 @@ trait InsertItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
 
       "if all compulsory fields are defined, fill undefined values with NULL" in {
         Await.result(connector.insertIgnore(tableName, insertFieldDataWithMissingFields), awaitTimeout) shouldBe Right(2)
-        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(9)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(9)
+        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(10)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(10)
         Await.result(connector.simpleSelect(simpleSelectIsNull), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
 
       }
