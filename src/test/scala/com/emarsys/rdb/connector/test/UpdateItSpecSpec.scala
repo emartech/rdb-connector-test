@@ -5,7 +5,7 @@ import akka.stream.scaladsl.Source
 import akka.stream.{ActorMaterializer, Materializer}
 import akka.testkit.TestKit
 import com.emarsys.rdb.connector.common.ConnectorResponse
-import com.emarsys.rdb.connector.common.models.DataManipulation.FieldValueWrapper.{BooleanValue, NullValue, StringValue}
+import com.emarsys.rdb.connector.common.models.DataManipulation.FieldValueWrapper.{BooleanValue, IntValue, NullValue, StringValue}
 import com.emarsys.rdb.connector.common.models.DataManipulation.UpdateDefinition
 import com.emarsys.rdb.connector.common.models.Errors.FailedValidation
 import com.emarsys.rdb.connector.common.models.SimpleSelect._
@@ -36,34 +36,34 @@ class UpdateItSpecSpec extends TestKit(ActorSystem()) with UpdateItSpec with Moc
     }
 
   val updateData =  Seq(
-    UpdateDefinition(Map("A3" -> BooleanValue(true)), Map("A1" -> StringValue("vt"))),
-    UpdateDefinition(Map("A3" -> BooleanValue(false)), Map("A1" -> StringValue("vf"))),
-    UpdateDefinition(Map("A3" -> NullValue), Map("A1" -> StringValue("vn")))
+    UpdateDefinition(Map("A3" -> BooleanValue(true)), Map("A2" -> IntValue(801))),
+    UpdateDefinition(Map("A3" -> BooleanValue(false)), Map("A2" -> IntValue(802))),
+    UpdateDefinition(Map("A3" -> NullValue), Map("A2" -> IntValue(803)))
   )
 
-  when(connector.update(tableName, Seq(UpdateDefinition(Map("A3" -> BooleanValue(true)), Map("A1" -> StringValue("vxxx")))))).thenReturn(Future.successful(Right(2)))
+  when(connector.update(tableName, Seq(UpdateDefinition(Map("A3" -> BooleanValue(true)), Map("A2" -> IntValue(800)))))).thenReturn(Future.successful(Right(2)))
   when(connector.update(tableName, updateData)).thenReturn(Future.successful(Right(7)))
   when(connector.update(tableName, Seq(UpdateDefinition(Map("a" -> StringValue("1")), Map("a" -> StringValue("2")))))).thenReturn(Future.successful(Left(FailedValidation(NonExistingFields(Set("a"))))))
 
 
   when(connector.simpleSelect(SimpleSelect(AllField, TableName(tableName),
     where = Some(
-      EqualToValue(FieldName("A1"), Value("vxxx"))
-    )))).thenReturn(Future(Right(Source(List(Seq("a"),Seq("s"))))))
+      EqualToValue(FieldName("A2"), Value("800"))
+    )))).thenReturn(Future(Right(Source(List(Seq("A2"), Seq("a"),Seq("s"))))))
 
   when(connector.simpleSelect(SimpleSelect(AllField, TableName(tableName),
     where = Some(
-      EqualToValue(FieldName("A1"), Value("vt"))
-    )))).thenReturn(Future(Right(Source(List(Seq("a"),Seq("s"))))))
+      EqualToValue(FieldName("A2"), Value("801"))
+    )))).thenReturn(Future(Right(Source(List(Seq("A2"), Seq("a"),Seq("s"))))))
 
   when(connector.simpleSelect(SimpleSelect(AllField, TableName(tableName),
     where = Some(
-      EqualToValue(FieldName("A1"), Value("vf"))
-    )))).thenReturn(Future(Right(Source(List(Seq("a"),Seq("s"), Seq("d"))))))
+      EqualToValue(FieldName("A2"), Value("802"))
+    )))).thenReturn(Future(Right(Source(List(Seq("A2"), Seq("a"),Seq("s"), Seq("d"))))))
 
   when(connector.simpleSelect(SimpleSelect(AllField, TableName(tableName),
     where = Some(
-      EqualToValue(FieldName("A1"), Value("vn"))
-    )))).thenReturn(Future(Right(Source(List(Seq("a"),Seq("s"))))))
+      EqualToValue(FieldName("A2"), Value("803"))
+    )))).thenReturn(Future(Right(Source(List(Seq("A2"), Seq("a"),Seq("s"))))))
 
 }

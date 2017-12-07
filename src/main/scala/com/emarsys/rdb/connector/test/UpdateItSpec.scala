@@ -5,7 +5,7 @@ import java.util.UUID
 import akka.stream.Materializer
 import akka.stream.scaladsl.Sink
 import com.emarsys.rdb.connector.common.models.{Connector, SimpleSelect}
-import com.emarsys.rdb.connector.common.models.DataManipulation.FieldValueWrapper.{BooleanValue, NullValue, StringValue}
+import com.emarsys.rdb.connector.common.models.DataManipulation.FieldValueWrapper.{BooleanValue, IntValue, NullValue, StringValue}
 import com.emarsys.rdb.connector.common.models.DataManipulation.UpdateDefinition
 import com.emarsys.rdb.connector.common.models.Errors.FailedValidation
 import com.emarsys.rdb.connector.common.models.SimpleSelect._
@@ -51,41 +51,41 @@ trait UpdateItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
       }
 
       "update successfully one definition" in {
-        val updateData =  Seq(UpdateDefinition(Map("A3" -> BooleanValue(true)), Map("A1" -> StringValue("vxxx"))))
+        val updateData =  Seq(UpdateDefinition(Map("A3" -> BooleanValue(true)), Map("A2" -> IntValue(800))))
         val simpleSelect = SimpleSelect(AllField, TableName(tableName),
           where = Some(
-            EqualToValue(FieldName("A1"), Value("vxxx"))
+            EqualToValue(FieldName("A2"), Value("800"))
           ))
 
         Await.result(connector.update(tableName, updateData), awaitTimeout) shouldBe Right(2)
-        Await.result(connector.simpleSelect(simpleSelect), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
+        Await.result(connector.simpleSelect(simpleSelect), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2+1)
       }
 
       "update successfully more definition" in {
         val simpleSelectT = SimpleSelect(AllField, TableName(tableName),
           where = Some(
-            EqualToValue(FieldName("A1"), Value("vt"))
+            EqualToValue(FieldName("A2"), Value("801"))
           ))
         val simpleSelectF = SimpleSelect(AllField, TableName(tableName),
           where = Some(
-            EqualToValue(FieldName("A1"), Value("vf"))
+            EqualToValue(FieldName("A2"), Value("802"))
           ))
         val simpleSelectN = SimpleSelect(AllField, TableName(tableName),
           where = Some(
-            EqualToValue(FieldName("A1"), Value("vn"))
+            EqualToValue(FieldName("A2"), Value("803"))
           ))
 
 
         val updateData =  Seq(
-          UpdateDefinition(Map("A3" -> BooleanValue(true)), Map("A1" -> StringValue("vt"))),
-          UpdateDefinition(Map("A3" -> BooleanValue(false)), Map("A1" -> StringValue("vf"))),
-          UpdateDefinition(Map("A3" -> NullValue), Map("A1" -> StringValue("vn")))
+          UpdateDefinition(Map("A3" -> BooleanValue(true)), Map("A2" -> IntValue(801))),
+          UpdateDefinition(Map("A3" -> BooleanValue(false)), Map("A2" -> IntValue(802))),
+          UpdateDefinition(Map("A3" -> NullValue), Map("A2" -> IntValue(803)))
         )
 
         Await.result(connector.update(tableName, updateData), awaitTimeout) shouldBe Right(7)
-        Await.result(connector.simpleSelect(simpleSelectT), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
-        Await.result(connector.simpleSelect(simpleSelectF), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(3)
-        Await.result(connector.simpleSelect(simpleSelectN), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
+        Await.result(connector.simpleSelect(simpleSelectT), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2+1)
+        Await.result(connector.simpleSelect(simpleSelectF), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(3+1)
+        Await.result(connector.simpleSelect(simpleSelectN), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2+1)
       }
     }
   }
