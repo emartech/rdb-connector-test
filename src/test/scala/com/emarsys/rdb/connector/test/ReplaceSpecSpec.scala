@@ -16,45 +16,33 @@ import scala.concurrent.Future
 
 class ReplaceSpecSpec extends TestKit(ActorSystem()) with ReplaceItSpec with MockitoSugar with BeforeAndAfterAll {
 
-    implicit val materializer: Materializer = ActorMaterializer()
+  import com.emarsys.rdb.connector.utils.TestHelper._
 
-    implicit val executionContext = system.dispatcher
+  implicit val materializer: Materializer = ActorMaterializer()
 
-    override val connector = mock[Connector]
+  implicit val executionContext = system.dispatcher
 
-    override def initDb(): Unit = ()
+  override val connector = mock[Connector]
 
-    override def cleanUpDb(): Unit = ()
+  override def initDb(): Unit = ()
 
-    override def afterAll {
-      TestKit.shutdownActorSystem(system)
-    }
+  override def cleanUpDb(): Unit = ()
 
+  override def afterAll {
+    TestKit.shutdownActorSystem(system)
+  }
 
   when(connector.replaceData(tableName, replaceMultipleData)).thenReturn(Future.successful(Right(3)))
   when(connector.replaceData(tableName, replaceSingleData)).thenReturn(Future.successful(Right(1)))
   when(connector.replaceData(tableName, Seq.empty)).thenReturn(Future.successful(Right(0)))
-
   when(connector.replaceData(tableName, replaceNonExistingFieldFieldData))
     .thenReturn(Future.successful(Left(FailedValidation(NonExistingFields(Set("a"))))))
 
 
-  Seq("v1new","v2new","v3new","vxxx").foreach(selectUniqueValueMock)
-  Seq(1,2,4).foreach(selectExactNumberMock)
+  Seq(simpleSelect, simpleSelectF, simpleSelectT, simpleSelectT2).foreach(selectUniqueValueMock(_, connector))
+  Seq(0, 2, 4).foreach(selectExactNumberMock(_, tableName, connector))
 
-  private def selectUniqueValueMock(value: String) = {
-    when(connector.simpleSelect(SimpleSelect(AllField, TableName(tableName),
-      where = Some(
-        EqualToValue(FieldName("A1"), Value(value))
-      )))).thenReturn(Future(Right(Source(List(Seq("columnName"),Seq(value))))))
-  }
 
-  private def selectExactNumberMock(number: Int) = {
-    when(connector.simpleSelect(SimpleSelect(AllField, TableName(tableName),
-      where = Some(
-        Or(Seq(EqualToValue(FieldName("A1"), Value(number.toString)), NotNull(FieldName("A1"))))))))
-      .thenReturn(Future(Right(Source(List.fill(number)(Seq("foo"))))))
-  }
 
 
 

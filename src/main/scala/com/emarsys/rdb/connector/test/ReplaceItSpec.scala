@@ -35,9 +35,22 @@ trait ReplaceItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
     connector.close()
   }
 
-  def simpleSelectAllWithExpectedResultSize(number: Int) = SimpleSelect(AllField, TableName(tableName),
+  val simpleSelect = SimpleSelect(AllField, TableName(tableName),
     where = Some(
-      Or(Seq(EqualToValue(FieldName("A1"), Value(number.toString)), NotNull(FieldName("A1"))))))
+      EqualToValue(FieldName("A1"), Value("vxxx"))
+    ))
+  val simpleSelectT = SimpleSelect(AllField, TableName(tableName),
+    where = Some(
+      EqualToValue(FieldName("A1"), Value("v1new"))
+    ))
+  val simpleSelectF = SimpleSelect(AllField, TableName(tableName),
+    where = Some(
+      EqualToValue(FieldName("A1"), Value("v2new"))
+    ))
+  val simpleSelectT2 = SimpleSelect(AllField, TableName(tableName),
+    where = Some(
+      EqualToValue(FieldName("A1"), Value("v3new"))
+    ))
 
   val replaceMultipleData: Seq[Record] =  Seq(
     Map("A1" -> StringValue("v1new"), "A3" -> BooleanValue(true)),
@@ -61,34 +74,15 @@ trait ReplaceItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
 
       "replace successfully with zero record" in {
         Await.result(connector.replaceData(tableName, Seq.empty), awaitTimeout) shouldBe Right(0)
-        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(1)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(1)}
+        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(0)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(0)}
 
       "replace successfully with one record" in {
-
-        val simpleSelect = SimpleSelect(AllField, TableName(tableName),
-          where = Some(
-            EqualToValue(FieldName("A1"), Value("vxxx"))
-          ))
-
         Await.result(connector.replaceData(tableName, replaceSingleData), awaitTimeout) shouldBe Right(1)
         Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(2)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
         Await.result(connector.simpleSelect(simpleSelect), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
       }
 
       "replace successfully with more records" in {
-        val simpleSelectT = SimpleSelect(AllField, TableName(tableName),
-          where = Some(
-            EqualToValue(FieldName("A1"), Value("v1new"))
-          ))
-        val simpleSelectF = SimpleSelect(AllField, TableName(tableName),
-          where = Some(
-            EqualToValue(FieldName("A1"), Value("v2new"))
-          ))
-        val simpleSelectT2 = SimpleSelect(AllField, TableName(tableName),
-          where = Some(
-            EqualToValue(FieldName("A1"), Value("v3new"))
-          ))
-
         Await.result(connector.replaceData(tableName, replaceMultipleData), awaitTimeout) shouldBe Right(3)
         Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(4)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(4)
         Await.result(connector.simpleSelect(simpleSelectT), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
@@ -98,5 +92,10 @@ trait ReplaceItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
       }
     }
   }
+
+  private def simpleSelectAllWithExpectedResultSize(number: Int) = SimpleSelect(AllField, TableName(tableName),
+    where = Some(
+      Or(Seq(EqualToValue(FieldName("A1"), Value(number.toString)), NotNull(FieldName("A1"))))))
+
 
 }
