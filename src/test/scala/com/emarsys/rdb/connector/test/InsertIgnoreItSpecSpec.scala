@@ -43,8 +43,8 @@ class InsertIgnoreItSpecSpec extends TestKit(ActorSystem()) with InsertItSpec wi
   when(connector.insertIgnore(tableName, insertNonExistingFieldFieldData))
     .thenReturn(Future.successful(Left(FailedValidation(NonExistingFields(Set("a"))))))
 
-  when(connector.simpleSelect(SimpleSelect(AllField, TableName(tableName), where = Option(IsNull(FieldName("A3")))
-  ))).thenReturn(Future(Right(Source(List(Seq("columnName"), Seq("vref1","vref1"))))))
+  when(connector.simpleSelect(simpleSelectIsNull))
+    .thenReturn(Future(Right(Source(List(Seq("columnName"), Seq("vref1"),Seq("vref2"),Seq("v5"),Seq("v7"))))))
 
 
   Seq(
@@ -52,8 +52,7 @@ class InsertIgnoreItSpecSpec extends TestKit(ActorSystem()) with InsertItSpec wi
     simpleSelectT,
     simpleSelectT2,
     simpleSelectOneRecord,
-    simpleSelectN,
-    simpleSelectIsNull
+    simpleSelectN
   ).foreach(selectUniqueValueMock(_, connector))
 
   Seq(11, 10, 9, 8).foreach(selectExactNumberMock(_, tableName, connector))

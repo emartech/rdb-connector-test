@@ -122,7 +122,7 @@ trait InsertItSpec extends WordSpecLike with Matchers with BeforeAndAfterEach wi
       "successfully insert if all compulsory fields are defined, fill undefined values with NULL" in {
         Await.result(connector.insertIgnore(tableName, insertFieldDataWithMissingFields), awaitTimeout) shouldBe Right(2)
         Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(10)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(10)
-        Await.result(connector.simpleSelect(simpleSelectIsNull), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
+        Await.result(connector.simpleSelect(simpleSelectIsNull), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(5)
 
       }
     }
