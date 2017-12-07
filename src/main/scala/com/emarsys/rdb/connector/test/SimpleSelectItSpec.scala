@@ -21,6 +21,7 @@ A(A1: string, A2: ?int, A3: ?boolean)
 B(B1: string, B2: string, B3: string, B4: ?string)
 
 (We will reuse these table definitions with these data.
+Please use unique and not null constraint on A1
 If you want to reuse them too and your DB has indexes add index to A3 pls.)
 
 Sample data:
