@@ -36,12 +36,12 @@ class UpdateItSpecSpec extends TestKit(ActorSystem()) with UpdateItSpec with Moc
     }
 
   val updateData =  Seq(
-    UpdateDefinition(Map("A1" -> StringValue("vt")), Map("A3" -> BooleanValue(true))),
-    UpdateDefinition(Map("A1" -> StringValue("vf")), Map("A3" -> BooleanValue(false))),
-    UpdateDefinition(Map("A1" -> StringValue("vn")), Map("A3" -> NullValue))
+    UpdateDefinition(Map("A3" -> BooleanValue(true)), Map("A1" -> StringValue("vt"))),
+    UpdateDefinition(Map("A3" -> BooleanValue(false)), Map("A1" -> StringValue("vf"))),
+    UpdateDefinition(Map("A3" -> NullValue), Map("A1" -> StringValue("vn")))
   )
 
-  when(connector.update(tableName, Seq(UpdateDefinition(Map("A1" -> StringValue("vxxx")), Map("A3" -> BooleanValue(true)))))).thenReturn(Future.successful(Right(2)))
+  when(connector.update(tableName, Seq(UpdateDefinition(Map("A3" -> BooleanValue(true)), Map("A1" -> StringValue("vxxx")))))).thenReturn(Future.successful(Right(2)))
   when(connector.update(tableName, updateData)).thenReturn(Future.successful(Right(7)))
   when(connector.update(tableName, Seq(UpdateDefinition(Map("a" -> StringValue("1")), Map("a" -> StringValue("2")))))).thenReturn(Future.successful(Left(FailedValidation(NonExistingFields(Set("a"))))))
 

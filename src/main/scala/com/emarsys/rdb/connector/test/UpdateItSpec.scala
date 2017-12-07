@@ -51,7 +51,7 @@ trait UpdateItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
       }
 
       "update successfully one definition" in {
-        val updateData =  Seq(UpdateDefinition(Map("A1" -> StringValue("vxxx")), Map("A3" -> BooleanValue(true))))
+        val updateData =  Seq(UpdateDefinition(Map("A3" -> BooleanValue(true)), Map("A1" -> StringValue("vxxx"))))
         val simpleSelect = SimpleSelect(AllField, TableName(tableName),
           where = Some(
             EqualToValue(FieldName("A1"), Value("vxxx"))
@@ -77,9 +77,9 @@ trait UpdateItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
 
 
         val updateData =  Seq(
-          UpdateDefinition(Map("A1" -> StringValue("vt")), Map("A3" -> BooleanValue(true))),
-          UpdateDefinition(Map("A1" -> StringValue("vf")), Map("A3" -> BooleanValue(false))),
-          UpdateDefinition(Map("A1" -> StringValue("vn")), Map("A3" -> NullValue))
+          UpdateDefinition(Map("A3" -> BooleanValue(true)), Map("A1" -> StringValue("vt"))),
+          UpdateDefinition(Map("A3" -> BooleanValue(false)), Map("A1" -> StringValue("vf"))),
+          UpdateDefinition(Map("A3" -> NullValue), Map("A1" -> StringValue("vn")))
         )
 
         Await.result(connector.update(tableName, updateData), awaitTimeout) shouldBe Right(7)
