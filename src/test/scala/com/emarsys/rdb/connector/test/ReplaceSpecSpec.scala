@@ -14,7 +14,7 @@ import org.scalatest.mockito.MockitoSugar
 
 import scala.concurrent.Future
 
-class InsertIgnoreItSpecSpec extends TestKit(ActorSystem()) with InsertItSpec with MockitoSugar with BeforeAndAfterAll {
+class ReplaceSpecSpec extends TestKit(ActorSystem()) with ReplaceItSpec with MockitoSugar with BeforeAndAfterAll {
 
     implicit val materializer: Materializer = ActorMaterializer()
 
@@ -31,22 +31,16 @@ class InsertIgnoreItSpecSpec extends TestKit(ActorSystem()) with InsertItSpec wi
     }
 
 
-  when(connector.insertIgnore(tableName, insertMultipleData)).thenReturn(Future.successful(Right(3)))
-  when(connector.insertIgnore(tableName, insertFieldDataWithMissingFields)).thenReturn(Future.successful(Right(2)))
-  when(connector.insertIgnore(tableName, insertSingleData)).thenReturn(Future.successful(Right(1)))
-  when(connector.insertIgnore(tableName, insertNullData)).thenReturn(Future.successful(Right(1)))
-  when(connector.insertIgnore(tableName, insertExistingData)).thenReturn(Future.successful(Right(0)))
-  when(connector.insertIgnore(tableName, Seq.empty)).thenReturn(Future.successful(Right(0)))
+  when(connector.replaceData(tableName, replaceMultipleData)).thenReturn(Future.successful(Right(3)))
+  when(connector.replaceData(tableName, replaceSingleData)).thenReturn(Future.successful(Right(1)))
+  when(connector.replaceData(tableName, Seq.empty)).thenReturn(Future.successful(Right(0)))
 
-  when(connector.insertIgnore(tableName, insertNonExistingFieldFieldData))
+  when(connector.replaceData(tableName, replaceNonExistingFieldFieldData))
     .thenReturn(Future.successful(Left(FailedValidation(NonExistingFields(Set("a"))))))
 
-  when(connector.simpleSelect(SimpleSelect(AllField, TableName(tableName), where = Option(IsNull(FieldName("A3")))
-  ))).thenReturn(Future(Right(Source(List(Seq("columnName"), Seq("vref1","vref1"))))))
 
-
-  Seq("v1new","v2new","v3new","vn", "vxxx", "v1").foreach(selectUniqueValueMock)
-  Seq(11,9,8).foreach(selectExactNumberMock)
+  Seq("v1new","v2new","v3new","vxxx").foreach(selectUniqueValueMock)
+  Seq(1,2,4).foreach(selectExactNumberMock)
 
   private def selectUniqueValueMock(value: String) = {
     when(connector.simpleSelect(SimpleSelect(AllField, TableName(tableName),

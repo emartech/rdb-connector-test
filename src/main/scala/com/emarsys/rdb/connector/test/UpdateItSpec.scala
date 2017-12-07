@@ -28,7 +28,7 @@ trait UpdateItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
   implicit val materializer: Materializer
 
   val uuid = UUID.randomUUID().toString
-  val tableName = s"metadata_list_tables_table_$uuid"
+  val tableName = s"update_tables_table_$uuid"
 
   val awaitTimeout = 5.seconds
 

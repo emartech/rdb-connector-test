@@ -22,7 +22,7 @@ trait InsertItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
   implicit val materializer: Materializer
 
   val uuid = UUID.randomUUID().toString
-  val tableName = s"metadata_list_tables_table_$uuid"
+  val tableName = s"insert_tables_table_$uuid"
 
   val awaitTimeout = 5.seconds
 
@@ -40,9 +40,9 @@ trait InsertItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
       Or(Seq(EqualToValue(FieldName("A1"), Value(number.toString)), NotNull(FieldName("A1"))))))
 
   val insertMultipleData: Seq[Record] =  Seq(
-    Map("A1" -> StringValue("vt"), "A3" -> BooleanValue(true)),
-    Map("A1" -> StringValue("vf"), "A3" -> BooleanValue(false)),
-    Map("A1" -> StringValue("vf2"), "A3" -> BooleanValue(false)))
+    Map("A1" -> StringValue("v1new"), "A3" -> BooleanValue(true)),
+    Map("A1" -> StringValue("v2new"), "A3" -> BooleanValue(false)),
+    Map("A1" -> StringValue("v3new"), "A3" -> BooleanValue(false)))
 
   val insertSingleData: Seq[Record] =  Seq(
     Map("A1" -> StringValue("vxxx"), "A3" -> BooleanValue(true)))
@@ -72,10 +72,8 @@ trait InsertItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
       }
 
       "insert successfully zero record" in {
-        val records =  Seq.empty
-
         Await.result(connector.insertIgnore(tableName, Seq.empty), awaitTimeout) shouldBe Right(0)
-       Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(8)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(8)}
+        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(8)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(8)}
 
       "insert successfully one record" in {
 
@@ -92,15 +90,15 @@ trait InsertItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
       "insert successfully more records" in {
         val simpleSelectT = SimpleSelect(AllField, TableName(tableName),
           where = Some(
-            EqualToValue(FieldName("A1"), Value("vt"))
+            EqualToValue(FieldName("A1"), Value("v1new"))
           ))
         val simpleSelectF = SimpleSelect(AllField, TableName(tableName),
           where = Some(
-            EqualToValue(FieldName("A1"), Value("vf"))
+            EqualToValue(FieldName("A1"), Value("v2new"))
           ))
         val simpleSelectT2 = SimpleSelect(AllField, TableName(tableName),
           where = Some(
-            EqualToValue(FieldName("A1"), Value("vn"))
+            EqualToValue(FieldName("A1"), Value("v3new"))
           ))
 
         Await.result(connector.insertIgnore(tableName, insertMultipleData), awaitTimeout) shouldBe Right(3)
