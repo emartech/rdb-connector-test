@@ -41,7 +41,7 @@ B:
   ("b$4", "b%4", "b 4", NULL)
  */
 trait SimpleSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
-  val uuid = UUID.randomUUID().toString
+  val uuid = UUID.randomUUID().toString.replace("-","")
 
   val postfixTableName = s"_simple_select_table_$uuid"
 
@@ -173,7 +173,7 @@ trait SimpleSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterA
         ))
       }
 
-      "list table values with EQUAL" in {
+      "list table values with EQUAL on strings" in {
         val simpleSelect = SimpleSelect(AllField, TableName(aTableName), where = Some(EqualToValue(FieldName("A1"), Value("v3"))))
 
         val result = getSimpleSelectResult(simpleSelect)
@@ -183,6 +183,18 @@ trait SimpleSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterA
           Seq("v3", "3", "1")
         ))
       }
+/* TODO: unlock this test after typesafety
+      "list table values with EQUAL on numbers" in {
+        val simpleSelect = SimpleSelect(AllField, TableName(aTableName), where = Some(EqualToValue(FieldName("A2"), Value("3"))))
+
+        val result = getSimpleSelectResult(simpleSelect)
+
+        checkResultWithoutRowOrder(result, Seq(
+          Seq("A1", "A2", "A3"),
+          Seq("v3", "3", "1")
+        ))
+      }
+*/
     }
 
     "#simpleSelect compose WHERE" should {
