@@ -23,7 +23,7 @@ trait DeleteItSpec extends WordSpecLike with Matchers with BeforeAndAfterEach wi
   def cleanUpDb(): Unit
   implicit val materializer: Materializer
 
-  val uuid = UUID.randomUUID().toString
+  val uuid = uuidGenerate
   val tableName = s"delete_tables_table_$uuid"
 
   val awaitTimeout = 5.seconds

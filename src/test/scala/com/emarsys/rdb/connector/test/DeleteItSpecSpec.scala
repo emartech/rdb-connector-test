@@ -30,7 +30,7 @@ class DeleteItSpecSpec extends TestKit(ActorSystem()) with DeleteItSpec with Moc
 
   when(connector.delete(tableName, simpleDeleteCiterion)).thenReturn(Future.successful(Right(1)))
   when(connector.delete(tableName, complexDeleteCriterion)).thenReturn(Future.successful(Right(2)))
-  when(connector.delete(tableName, nullValueDeleteCriterion)).thenReturn(Future.successful(Right(3)))
+  when(connector.delete(tableName, nullValueDeleteCriterion)).thenReturn(Future.successful(Right(2)))
   when(connector.delete(tableName, notMatchingComplexDeleteCriterion)).thenReturn(Future.successful(Right(0)))
   when(connector.delete(tableName, Seq.empty)).thenReturn(Future.successful(Right(0)))
 

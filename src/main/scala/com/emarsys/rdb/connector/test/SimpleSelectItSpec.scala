@@ -41,7 +41,7 @@ B:
   ("b$4", "b%4", "b 4", NULL)
  */
 trait SimpleSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
-  val uuid = UUID.randomUUID().toString.replace("-","")
+  val uuid = uuidGenerate
 
   val postfixTableName = s"_simple_select_table_$uuid"
 

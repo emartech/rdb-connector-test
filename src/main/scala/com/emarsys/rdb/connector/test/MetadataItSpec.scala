@@ -16,7 +16,7 @@ The table must have "PersonID", "LastName", "FirstName", "Address", "City" colum
 The view must have "PersonID", "LastName", "FirstName" columns.
  */
 trait MetadataItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
-  val uuid = UUID.randomUUID().toString
+  val uuid = uuidGenerate
   val tableName = s"metadata_list_tables_table_$uuid"
   val viewName = s"metadata_list_tables_view_$uuid"
   val connector: Connector

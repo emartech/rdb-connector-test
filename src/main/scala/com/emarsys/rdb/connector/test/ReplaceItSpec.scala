@@ -21,7 +21,7 @@ trait ReplaceItSpec extends WordSpecLike with Matchers with BeforeAndAfterEach w
   def cleanUpDb(): Unit
   implicit val materializer: Materializer
 
-  val uuid = UUID.randomUUID().toString
+  val uuid = uuidGenerate
   val tableName = s"replace_tables_table_$uuid"
 
   val awaitTimeout = 5.seconds

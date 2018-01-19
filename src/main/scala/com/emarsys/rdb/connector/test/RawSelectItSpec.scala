@@ -33,7 +33,7 @@ trait RawSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll 
   val badSimpleSelect: String
   val simpleSelectNoSemicolon: String
 
-  val uuid = UUID.randomUUID().toString
+  val uuid = uuidGenerate
 
   val postfixTableName = s"_raw_select_table_$uuid"
 
