@@ -79,8 +79,25 @@ class SimpleSelectItSpecSpec extends TestKit(ActorSystem()) with SimpleSelectItS
     Seq("v6", "6", null)
   ).to[scala.collection.immutable.Seq]))))
 
-  when(connector.simpleSelect(SimpleSelect(AllField, TableName(aTableName), where = Some(EqualToValue(FieldName("A1"), Value("v3")))))).thenReturn(Future(Right(Source(Seq(
+  when(connector.simpleSelect(SimpleSelect(AllField, TableName(aTableName),
+    where = Some(EqualToValue(FieldName("A1"), Value("v3"))))
+  )).thenReturn(Future(Right(Source(Seq(
     Seq("A1", "A2", "A3"),
+    Seq("v3", "3", "1")
+  ).to[scala.collection.immutable.Seq]))))
+
+  when(connector.simpleSelect(SimpleSelect(AllField, TableName(aTableName),
+    where = Some(EqualToValue(FieldName("A2"), Value("3"))))
+  )).thenReturn(Future(Right(Source(Seq(
+    Seq("A1", "A2", "A3"),
+    Seq("v3", "3", "1")
+  ).to[scala.collection.immutable.Seq]))))
+
+  when(connector.simpleSelect(SimpleSelect(AllField, TableName(aTableName),
+    where = Some(EqualToValue(FieldName("A3"), Value("1"))))
+  )).thenReturn(Future(Right(Source(Seq(
+    Seq("A1", "A2", "A3"),
+    Seq("v1", "1", "1"),
     Seq("v3", "3", "1")
   ).to[scala.collection.immutable.Seq]))))
 
@@ -105,7 +122,6 @@ class SimpleSelectItSpecSpec extends TestKit(ActorSystem()) with SimpleSelectItS
     Seq("A1", "A2", "A3"),
     Seq("v7", null, null)
   ).to[scala.collection.immutable.Seq]))))
-
 
   when(connector.simpleSelect(SimpleSelect(AllField, TableName(aTableName),
     where = Some(And(Seq(

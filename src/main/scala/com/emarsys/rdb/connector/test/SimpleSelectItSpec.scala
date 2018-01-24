@@ -183,7 +183,7 @@ trait SimpleSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterA
           Seq("v3", "3", "1")
         ))
       }
-/* TODO: unlock this test after typesafety
+
       "list table values with EQUAL on numbers" in {
         val simpleSelect = SimpleSelect(AllField, TableName(aTableName), where = Some(EqualToValue(FieldName("A2"), Value("3"))))
 
@@ -194,7 +194,18 @@ trait SimpleSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterA
           Seq("v3", "3", "1")
         ))
       }
-*/
+
+      "list table values with EQUAL on booleans" in {
+        val simpleSelect = SimpleSelect(AllField, TableName(aTableName), where = Some(EqualToValue(FieldName("A3"), Value("1"))))
+
+        val result = getSimpleSelectResult(simpleSelect)
+
+        checkResultWithoutRowOrder(result, Seq(
+          Seq("A1", "A2", "A3"),
+          Seq("v1", "1", "1"),
+          Seq("v3", "3", "1")
+        ))
+      }
     }
 
     "#simpleSelect compose WHERE" should {
