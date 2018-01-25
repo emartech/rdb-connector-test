@@ -1,5 +1,6 @@
 # Rdb - connector - test
 
+[ ![Codeship Status for emartech/rdb-connector-test](https://app.codeship.com/projects/d27c9e40-e406-0135-bca6-623ae4419be6/status?branch=master)](https://app.codeship.com/projects/268713)
 [![](https://jitpack.io/v/emartech/rdb-connector-test.svg)](https://jitpack.io/#emartech/rdb-connector-test)
 
 ## Definitions:
