@@ -66,10 +66,11 @@ trait SimpleSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterA
 
   def cleanUpDb(): Unit
 
-  def checkResultWithoutRowOrder(result: Seq[Seq[String]], expected: Seq[Seq[String]]): Unit = {
+
+  def checkResultWithoutRowOrder(result: Seq[Seq[String]], expected: Seq[Seq[String]]): Unit = new Ordering.ExtraImplicits {
     result.size shouldEqual expected.size
     result.head.map(_.toUpperCase) shouldEqual expected.head.map(_.toUpperCase)
-    result.forall(expected contains _) shouldEqual true
+    result.sorted shouldEqual expected.sorted
   }
 
   def getSimpleSelectResult(simpleSelect: SimpleSelect): Seq[Seq[String]] = {
@@ -116,23 +117,23 @@ trait SimpleSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterA
       }
 
       "list table values with specific fields" in {
-        val simpleSelect = SimpleSelect(SpecificFields(Seq(FieldName("A3"), FieldName("A1"))), TableName(aTableName))
+        val simpleSelect = SimpleSelect(SpecificFields(Seq(FieldName("A1"), FieldName("A3"))), TableName(aTableName))
 
         val result = getSimpleSelectResult(simpleSelect)
 
         checkResultWithoutRowOrder(result, Seq(
-          Seq("A3", "A1"),
-          Seq("1", "v1"),
-          Seq("0", "v2"),
-          Seq("1", "v3"),
-          Seq("0", "v4"),
-          Seq("0", "v5"),
-          Seq(null, "v6"),
-          Seq(null, "v7")
+          Seq("A1", "A3"),
+          Seq("v1", "1"),
+          Seq("v2", "0"),
+          Seq("v3", "1"),
+          Seq("v4", "0"),
+          Seq("v5", "0"),
+          Seq("v6", null),
+          Seq("v7", null)
         ))
       }
-
     }
+
     "#simpleSelect LIMIT" should {
 
       "list table values with LIMIT 2" in {
