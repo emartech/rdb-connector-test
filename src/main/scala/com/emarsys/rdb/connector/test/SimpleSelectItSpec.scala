@@ -69,7 +69,7 @@ trait SimpleSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterA
   def checkResultWithoutRowOrder(result: Seq[Seq[String]], expected: Seq[Seq[String]]): Unit = {
     result.size shouldEqual expected.size
     result.head.map(_.toUpperCase) shouldEqual expected.head.map(_.toUpperCase)
-    result.foreach(expected contains _)
+    result.forall(expected contains _) shouldEqual true
   }
 
   def getSimpleSelectResult(simpleSelect: SimpleSelect): Seq[Seq[String]] = {
