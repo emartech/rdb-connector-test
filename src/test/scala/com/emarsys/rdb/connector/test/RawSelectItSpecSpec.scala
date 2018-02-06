@@ -61,7 +61,15 @@ class RawSelectItSpecSpec extends TestKit(ActorSystem()) with RawSelectItSpec wi
 
   when(connector.validateProjectedRawSelect(simpleSelect, Seq("NONEXISTENT_COLUMN"))).thenReturn(Future(Left(ErrorWithMessage("bad query"))))
 
-  when(connector.projectedRawSelect(simpleSelect, Seq("A2", "A3"))).thenReturn(Future(Right(Source(Seq(
+  when(connector.projectedRawSelect(simpleSelect, Seq("A2", "A3"), allowNullFieldValue = false)).thenReturn(Future(Right(Source(Seq(
+    Seq("A2", "A3"),
+    Seq("1", "1"),
+    Seq("3", "1"),
+    Seq("2", "0"),
+    Seq("-4", "0")
+  ).to[scala.collection.immutable.Seq]))))
+
+  when(connector.projectedRawSelect(simpleSelect, Seq("A2", "A3"), allowNullFieldValue = true)).thenReturn(Future(Right(Source(Seq(
     Seq("A2", "A3"),
     Seq("1", "1"),
     Seq("3", "1"),

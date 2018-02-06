@@ -126,8 +126,8 @@ trait RawSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll 
 
       }
 
-      "project more col as expected" in {
-        val result = getStreamResult(connector.projectedRawSelect(simpleSelect, Seq("A2", "A3")))
+      "project more col as expected and allow null values" in {
+        val result = getStreamResult(connector.projectedRawSelect(simpleSelect, Seq("A2", "A3"), allowNullFieldValue = true))
 
         checkResultWithoutRowOrder(result, Seq(
           Seq("A2", "A3"),
@@ -138,6 +138,18 @@ trait RawSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll 
           Seq(null, "0"),
           Seq("6", null),
           Seq(null, null)
+        ))
+      }
+
+      "project more col as expected and disallow null values" in {
+        val result = getStreamResult(connector.projectedRawSelect(simpleSelect, Seq("A2", "A3")))
+
+        checkResultWithoutRowOrder(result, Seq(
+          Seq("A2", "A3"),
+          Seq("1", "1"),
+          Seq("2", "0"),
+          Seq("3", "1"),
+          Seq("-4", "0")
         ))
       }
     }
