@@ -87,7 +87,7 @@ trait RawSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll 
       }
 
       "return error if not ok" in {
-        Await.result(connector.validateProjectedRawSelect(simpleSelect, Seq("NONEXISTENT_COLUMN")), awaitTimeout) shouldBe a[Left[ErrorWithMessage, Unit]]
+        Await.result(connector.validateProjectedRawSelect(simpleSelect, Seq("NONEXISTENT_COLUMN")), awaitTimeout) shouldBe a[Left[_, _]]
       }
     }
 
@@ -103,7 +103,7 @@ trait RawSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll 
 
       "return error if not ok" in {
 
-        Await.result(connector.validateRawSelect(badSimpleSelect), awaitTimeout) shouldBe a[Left[ErrorWithMessage, Unit]]
+        Await.result(connector.validateRawSelect(badSimpleSelect), awaitTimeout) shouldBe a[Left[_, _]]
       }
     }
 
