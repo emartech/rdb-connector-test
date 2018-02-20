@@ -1,7 +1,5 @@
 package com.emarsys.rdb.connector.test
 
-import java.util.UUID
-
 import akka.NotUsed
 import akka.stream.Materializer
 import akka.stream.scaladsl.{Sink, Source}

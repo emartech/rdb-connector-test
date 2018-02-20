@@ -1,13 +1,10 @@
 package com.emarsys.rdb.connector.test
 
-import java.util.UUID
-
 import akka.NotUsed
 import akka.stream.scaladsl.{Sink, Source}
 import akka.stream.Materializer
 import com.emarsys.rdb.connector.common.ConnectorResponse
 import com.emarsys.rdb.connector.common.models.Connector
-import com.emarsys.rdb.connector.common.models.Errors.ErrorWithMessage
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
 
 import scala.concurrent.{Await, ExecutionContextExecutor}

@@ -4,15 +4,12 @@ import akka.actor.ActorSystem
 import akka.stream.scaladsl.Source
 import akka.stream.{ActorMaterializer, Materializer}
 import akka.testkit.TestKit
-import com.emarsys.rdb.connector.common.ConnectorResponse
 import com.emarsys.rdb.connector.common.models.DataManipulation.FieldValueWrapper.{BooleanValue, IntValue, NullValue, StringValue}
 import com.emarsys.rdb.connector.common.models.DataManipulation.UpdateDefinition
 import com.emarsys.rdb.connector.common.models.Errors.FailedValidation
 import com.emarsys.rdb.connector.common.models.SimpleSelect._
-import com.emarsys.rdb.connector.common.models.TableSchemaDescriptors.{FieldModel, TableModel}
 import com.emarsys.rdb.connector.common.models.ValidateDataManipulation.ValidationResult.NonExistingFields
-import com.emarsys.rdb.connector.common.models.{Connector, DataManipulation, SimpleSelect}
-import org.mockito.ArgumentMatchers.any
+import com.emarsys.rdb.connector.common.models.{Connector, SimpleSelect}
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.mockito.MockitoSugar

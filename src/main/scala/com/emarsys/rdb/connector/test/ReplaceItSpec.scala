@@ -1,10 +1,8 @@
 package com.emarsys.rdb.connector.test
 
-import java.util.UUID
-
 import akka.stream.Materializer
 import akka.stream.scaladsl.Sink
-import com.emarsys.rdb.connector.common.models.DataManipulation.FieldValueWrapper.{BooleanValue, NullValue, StringValue}
+import com.emarsys.rdb.connector.common.models.DataManipulation.FieldValueWrapper.{BooleanValue, StringValue}
 import com.emarsys.rdb.connector.common.models.DataManipulation.Record
 import com.emarsys.rdb.connector.common.models.Errors.FailedValidation
 import com.emarsys.rdb.connector.common.models.SimpleSelect._

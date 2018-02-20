@@ -1,7 +1,5 @@
 package com.emarsys.rdb.connector.test
 
-import java.util.UUID
-
 import akka.stream.Materializer
 import akka.stream.scaladsl.Sink
 import com.emarsys.rdb.connector.common.models.{Connector, SimpleSelect}
@@ -9,8 +7,7 @@ import com.emarsys.rdb.connector.common.models.DataManipulation.FieldValueWrappe
 import com.emarsys.rdb.connector.common.models.DataManipulation.UpdateDefinition
 import com.emarsys.rdb.connector.common.models.Errors.FailedValidation
 import com.emarsys.rdb.connector.common.models.SimpleSelect._
-import com.emarsys.rdb.connector.common.models.TableSchemaDescriptors.TableModel
-import com.emarsys.rdb.connector.common.models.ValidateDataManipulation.ValidationResult.{InvalidOperationOnView, NonExistingFields}
+import com.emarsys.rdb.connector.common.models.ValidateDataManipulation.ValidationResult.NonExistingFields
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Matchers, WordSpecLike}
 
 import concurrent.duration._

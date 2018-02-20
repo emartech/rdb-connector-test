@@ -1,7 +1,5 @@
 package com.emarsys.rdb.connector.test
 
-import java.util.UUID
-
 import com.emarsys.rdb.connector.common.models.Connector
 import com.emarsys.rdb.connector.common.models.Errors.TableNotFound
 import com.emarsys.rdb.connector.common.models.TableSchemaDescriptors.{FieldModel, FullTableModel, TableModel}
