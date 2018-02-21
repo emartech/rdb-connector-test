@@ -74,7 +74,7 @@ trait UpsertItSpec extends WordSpecLike with Matchers with BeforeAndAfterEach wi
       }
 
       "upsert successfully more records" in {
-        Await.result(connector.upsert(tableName, insertAndUpdateData), awaitTimeout) shouldBe Right(3)
+        Await.result(connector.upsert(tableName, insertAndUpdateData), awaitTimeout) shouldBe Right(2)
         Await.result(connector.simpleSelect(simpleSelectAll), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(8 + 1)
         Await.result(connector.simpleSelect(simpleSelectV1), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(1 + 1)
         Await.result(connector.simpleSelect(simpleSelectV1new), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(1 + 1)

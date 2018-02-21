@@ -29,7 +29,7 @@ class UpsertItSpecSpec extends TestKit(ActorSystem()) with UpsertItSpec with Moc
     TestKit.shutdownActorSystem(system)
   }
 
-  when(connector.upsert(tableName, insertAndUpdateData)).thenReturn(Future.successful(Right(3)))
+  when(connector.upsert(tableName, insertAndUpdateData)).thenReturn(Future.successful(Right(2)))
   when(connector.upsert(tableName, upsertNonExistingFieldFieldData))
     .thenReturn(Future.successful(Left(FailedValidation(NonExistingFields(Set("a"))))))
 
