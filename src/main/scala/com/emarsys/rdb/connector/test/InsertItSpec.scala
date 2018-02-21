@@ -94,7 +94,8 @@ trait InsertItSpec extends WordSpecLike with Matchers with BeforeAndAfterEach wi
 
       "insert successfully zero record" in {
         Await.result(connector.insertIgnore(tableName, Seq.empty), awaitTimeout) shouldBe Right(0)
-        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(8)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(8)}
+        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(8)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(8)
+      }
 
       "insert successfully one record" in {
         Await.result(connector.insertIgnore(tableName, insertSingleData), awaitTimeout) shouldBe Right(1)
