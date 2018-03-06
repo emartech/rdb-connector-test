@@ -10,7 +10,7 @@ resolvers += "jitpack" at "https://jitpack.io"
 libraryDependencies ++= {
   val scalaTestV = "3.0.1"
   Seq(
-    "com.github.emartech" % "rdb-connector-common"  % "928ea258ff",
+    "com.github.emartech" % "rdb-connector-common"  % "76c48422d9",
     "org.scalatest"       %% "scalatest"            % scalaTestV,
     "com.typesafe.akka"   %% "akka-stream-testkit"  % "2.5.6"   % Test,
     "org.mockito"         %  "mockito-core"         % "2.11.0"  % Test

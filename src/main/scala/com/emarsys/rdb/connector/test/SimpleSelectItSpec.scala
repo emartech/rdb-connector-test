@@ -165,7 +165,7 @@ trait SimpleSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterA
       }
 
       "list table values with DISTINCT" in {
-        val simpleSelect = SimpleSelect(AllField, TableName(cTableName), distinct = true)
+        val simpleSelect = SimpleSelect(AllField, TableName(cTableName), distinct = Some(true))
 
         val result = getSimpleSelectResult(simpleSelect)
 

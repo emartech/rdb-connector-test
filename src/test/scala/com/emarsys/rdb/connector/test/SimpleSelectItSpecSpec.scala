@@ -54,7 +54,7 @@ class SimpleSelectItSpecSpec extends TestKit(ActorSystem()) with SimpleSelectItS
     Seq("c3"),
   ).to[scala.collection.immutable.Seq]))))
 
-  when(connector.simpleSelect(SimpleSelect(AllField, TableName(cTableName), distinct = true))).thenReturn(Future(Right(Source(Seq(
+  when(connector.simpleSelect(SimpleSelect(AllField, TableName(cTableName), distinct = Some(true)))).thenReturn(Future(Right(Source(Seq(
     Seq("C"),
     Seq("c12"),
     Seq("c3"),
