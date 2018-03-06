@@ -17,6 +17,7 @@ columns and must insert the sample data.
 Tables:
 A(A1: string, A2: ?int, A3: ?boolean)
 B(B1: string, B2: string, B3: string, B4: ?string)
+C(C1: string)
 
 (We will reuse these table definitions with these data.
 Please use unique and not null constraint on A1
@@ -37,6 +38,12 @@ B:
   ("b;2", "b\\2", "b'2", "b=2")
   ("b!3", "b@3", "b#3", NULL)
   ("b$4", "b%4", "b 4", NULL)
+
+C:
+  ("c12")
+  ("c12")
+  ("c3")
+
  */
 trait SimpleSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
   val uuid = uuidGenerate
@@ -45,6 +52,7 @@ trait SimpleSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterA
 
   val aTableName = s"a$postfixTableName"
   val bTableName = s"b$postfixTableName"
+  val cTableName = s"c$postfixTableName"
   val connector: Connector
 
   val awaitTimeout = 5.seconds
@@ -79,6 +87,8 @@ trait SimpleSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterA
 
     Await.result(resultStream.runWith(Sink.seq), awaitTimeout)
   }
+
+  private val headerLineSize = 1
 
   s"SimpleSelectItSpec $uuid" when {
 
@@ -139,8 +149,27 @@ trait SimpleSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterA
 
         val result = getSimpleSelectResult(simpleSelect)
 
-        result.size shouldEqual 3
+        result.size shouldEqual headerLineSize + 2
         result.head.map(_.toUpperCase) shouldEqual Seq("A1", "A2", "A3").map(_.toUpperCase)
+      }
+    }
+
+    "#simpleSelect DISTINCT" should {
+
+      "list table values without DISTINCT" in {
+        val simpleSelect = SimpleSelect(AllField, TableName(cTableName))
+
+        val result = getSimpleSelectResult(simpleSelect)
+
+        result.size shouldEqual headerLineSize + 3
+      }
+
+      "list table values with DISTINCT" in {
+        val simpleSelect = SimpleSelect(AllField, TableName(cTableName), distinct = true)
+
+        val result = getSimpleSelectResult(simpleSelect)
+
+        result.size shouldEqual headerLineSize + 2
       }
     }
 
