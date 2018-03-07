@@ -29,7 +29,7 @@ Z:
   ("r2", 2, false, "s2")
   ("r3", 3, NULL, "s3")
   ("r4", 45, true, "s4")
-  ("r5", 45, NULL, "s5")
+  ("r5", 45, true, "s5")
  */
 trait SearchItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
   val uuid = uuidGenerate
@@ -104,7 +104,7 @@ trait SearchItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
       }
 
       "find by null" in {
-        val result = getResult(connector.search(tableName, Map("z2" -> NullValue), None))
+        val result = getResult(connector.search(tableName, Map("z3" -> NullValue), None))
 
         checkResultWithoutRowOrder(result, Seq(
           Seq("Z1", "Z2", "Z3", "Z4"),
