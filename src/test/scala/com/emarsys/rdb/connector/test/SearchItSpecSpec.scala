@@ -51,7 +51,7 @@ class SearchItSpecSpec extends TestKit(ActorSystem()) with SearchItSpec with Moc
   when(connector.search(tableName, Map("z2" -> IntValue(45)), None)).thenReturn(Future(Right(Source(Seq(
     Seq("Z1", "Z2", "Z3", "Z4"),
     Seq("r4", "45", "1", "s4"),
-    Seq("r5", "45", null, "s5")
+    Seq("r5", "45", "1", "s5")
   ).to[scala.collection.immutable.Seq]))))
 
 }
