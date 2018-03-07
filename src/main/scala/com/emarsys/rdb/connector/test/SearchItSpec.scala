@@ -118,7 +118,7 @@ trait SearchItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
         checkResultWithoutRowOrder(result, Seq(
           Seq("Z1", "Z2", "Z3", "Z4"),
           Seq("r4", "45", "1", "s4"),
-          Seq("r5", "45", null, "s5")
+          Seq("r5", "45", "1", "s5")
         ))
       }
 
