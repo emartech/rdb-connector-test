@@ -61,7 +61,7 @@ class RawSelectItSpecSpec extends TestKit(ActorSystem()) with RawSelectItSpec wi
 
   when(connector.validateProjectedRawSelect(simpleSelect, Seq("NONEXISTENT_COLUMN"))).thenReturn(Future(Left(ErrorWithMessage("bad query"))))
 
-  when(connector.projectedRawSelect(simpleSelect, Seq("A2", "A3"), allowNullFieldValue = false)).thenReturn(Future(Right(Source(Seq(
+  when(connector.projectedRawSelect(simpleSelect, Seq("A2", "A3"), None, allowNullFieldValue = false)).thenReturn(Future(Right(Source(Seq(
     Seq("A2", "A3"),
     Seq("1", "1"),
     Seq("3", "1"),
@@ -69,7 +69,7 @@ class RawSelectItSpecSpec extends TestKit(ActorSystem()) with RawSelectItSpec wi
     Seq("-4", "0")
   ).to[scala.collection.immutable.Seq]))))
 
-  when(connector.projectedRawSelect(simpleSelect, Seq("A2", "A3"), allowNullFieldValue = true)).thenReturn(Future(Right(Source(Seq(
+  when(connector.projectedRawSelect(simpleSelect, Seq("A2", "A3"), None, allowNullFieldValue = true)).thenReturn(Future(Right(Source(Seq(
     Seq("A2", "A3"),
     Seq("1", "1"),
     Seq("3", "1"),
@@ -80,7 +80,7 @@ class RawSelectItSpecSpec extends TestKit(ActorSystem()) with RawSelectItSpec wi
     Seq(null, null)
   ).to[scala.collection.immutable.Seq]))))
 
-  when(connector.projectedRawSelect(simpleSelect, Seq("A1"))).thenReturn(Future(Right(Source(Seq(
+  when(connector.projectedRawSelect(simpleSelect, Seq("A1"), None)).thenReturn(Future(Right(Source(Seq(
     Seq("A1"),
     Seq("v1"),
     Seq("v3"),
@@ -89,6 +89,14 @@ class RawSelectItSpecSpec extends TestKit(ActorSystem()) with RawSelectItSpec wi
     Seq("v4"),
     Seq("v5"),
     Seq("v7")
+  ).to[scala.collection.immutable.Seq]))))
+
+
+  when(connector.projectedRawSelect(simpleSelect, Seq("A1"), Some(3))).thenReturn(Future(Right(Source(Seq(
+    Seq("A1"),
+    Seq("v1"),
+    Seq("v3"),
+    Seq("v2"),
   ).to[scala.collection.immutable.Seq]))))
 
 }
