@@ -35,7 +35,7 @@ class DeleteItSpecSpec extends TestKit(ActorSystem()) with DeleteItSpec with Moc
   when(connector.delete(tableName, Seq.empty)).thenReturn(Future.successful(Right(0)))
 
 
-  Seq(simpleNullSelect, simpleSelect, complexSelect).foreach(emptyResultSelectMock(_, connector))
-  Seq(5, 6, 7, 8).foreach(selectExactNumberMock(_, tableName, connector))
+  Seq(simpleNullSelect, simpleSelect, complexSelect).foreach(emptyResultSelectMock(_, connector, queryTimeout))
+  Seq(5, 6, 7, 8).foreach(selectExactNumberMock(_, tableName, connector, queryTimeout))
 
 }

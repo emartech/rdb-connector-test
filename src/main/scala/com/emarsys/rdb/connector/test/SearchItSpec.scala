@@ -39,6 +39,7 @@ trait SearchItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
   val connector: Connector
 
   val awaitTimeout = 5.seconds
+  val queryTimeout = 5.seconds
 
   implicit val materializer: Materializer
 
@@ -77,7 +78,7 @@ trait SearchItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
 
     "#search" should {
       "find by string" in {
-        val result = getResult(connector.search(tableName, Map("z1" -> StringValue("r1")), None))
+        val result = getResult(connector.search(tableName, Map("z1" -> StringValue("r1")), None, queryTimeout))
 
         checkResultWithoutRowOrder(result, Seq(
           Seq("Z1", "Z2", "Z3", "Z4"),
@@ -86,7 +87,7 @@ trait SearchItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
       }
 
       "find by int" in {
-        val result = getResult(connector.search(tableName, Map("z2" -> IntValue(2)), None))
+        val result = getResult(connector.search(tableName, Map("z2" -> IntValue(2)), None, queryTimeout))
 
         checkResultWithoutRowOrder(result, Seq(
           Seq("Z1", "Z2", "Z3", "Z4"),
@@ -95,7 +96,7 @@ trait SearchItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
       }
 
       "find by boolean" in {
-        val result = getResult(connector.search(tableName, Map("z3" -> BooleanValue(false)), None))
+        val result = getResult(connector.search(tableName, Map("z3" -> BooleanValue(false)), None, queryTimeout))
 
         checkResultWithoutRowOrder(result, Seq(
           Seq("Z1", "Z2", "Z3", "Z4"),
@@ -104,7 +105,7 @@ trait SearchItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
       }
 
       "find by null" in {
-        val result = getResult(connector.search(tableName, Map("z3" -> NullValue), None))
+        val result = getResult(connector.search(tableName, Map("z3" -> NullValue), None, queryTimeout))
 
         checkResultWithoutRowOrder(result, Seq(
           Seq("Z1", "Z2", "Z3", "Z4"),
@@ -113,7 +114,7 @@ trait SearchItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
       }
 
       "find by int multiple line" in {
-        val result = getResult(connector.search(tableName, Map("z2" -> IntValue(45)), None))
+        val result = getResult(connector.search(tableName, Map("z2" -> IntValue(45)), None, queryTimeout))
 
         checkResultWithoutRowOrder(result, Seq(
           Seq("Z1", "Z2", "Z3", "Z4"),

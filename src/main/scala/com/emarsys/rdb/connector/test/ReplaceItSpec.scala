@@ -23,6 +23,7 @@ trait ReplaceItSpec extends WordSpecLike with Matchers with BeforeAndAfterEach w
   val tableName = s"replace_tables_table_$uuid"
 
   val awaitTimeout = 5.seconds
+  val queryTimeout = 5.seconds
 
   override def beforeEach(): Unit = {
     initDb()
@@ -75,20 +76,20 @@ trait ReplaceItSpec extends WordSpecLike with Matchers with BeforeAndAfterEach w
 
       "replace successfully with zero record" in {
         Await.result(connector.replaceData(tableName, Seq.empty), awaitTimeout) shouldBe Right(0)
-        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(0)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(0)}
+        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(0), queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(0)}
 
       "replace successfully with one record" in {
         Await.result(connector.replaceData(tableName, replaceSingleData), awaitTimeout) shouldBe Right(1)
-        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(2)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
-        Await.result(connector.simpleSelect(simpleSelect), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
+        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(2), queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
+        Await.result(connector.simpleSelect(simpleSelect, queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
       }
 
       "replace successfully with more records" in {
         Await.result(connector.replaceData(tableName, replaceMultipleData), awaitTimeout) shouldBe Right(3)
-        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(4)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(4)
-        Await.result(connector.simpleSelect(simpleSelectT), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
-        Await.result(connector.simpleSelect(simpleSelectF), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
-        Await.result(connector.simpleSelect(simpleSelectT2), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
+        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(4), queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(4)
+        Await.result(connector.simpleSelect(simpleSelectT, queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
+        Await.result(connector.simpleSelect(simpleSelectF, queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
+        Await.result(connector.simpleSelect(simpleSelectT2, queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
 
       }
     }

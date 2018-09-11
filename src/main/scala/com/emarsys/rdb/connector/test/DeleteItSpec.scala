@@ -25,6 +25,7 @@ trait DeleteItSpec extends WordSpecLike with Matchers with BeforeAndAfterEach wi
   val tableName = s"delete_tables_table_$uuid"
 
   val awaitTimeout = 5.seconds
+  val queryTimeout = 5.seconds
 
   val simpleDeleteCiterion =  Seq(
     Map("A2" -> StringValue("2")))
@@ -78,25 +79,25 @@ trait DeleteItSpec extends WordSpecLike with Matchers with BeforeAndAfterEach wi
 
       "delete matching rows by simple criterions" in {
         Await.result(connector.delete(tableName, simpleDeleteCiterion), awaitTimeout) shouldBe Right(1)
-        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(7)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(7)
-        Await.result(connector.simpleSelect(simpleSelect), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(0)
+        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(7), queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(7)
+        Await.result(connector.simpleSelect(simpleSelect, queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(0)
       }
 
       "delete matching rows by complex criterions" in {
         Await.result(connector.delete(tableName, complexDeleteCriterion), awaitTimeout) shouldBe Right(2)
-        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(6)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(6)
-        Await.result(connector.simpleSelect(complexSelect), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(0)
+        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(6), queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(6)
+        Await.result(connector.simpleSelect(complexSelect, queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(0)
       }
 
       "delete nothing if complex criterion does not match any result" in {
         Await.result(connector.delete(tableName, notMatchingComplexDeleteCriterion), awaitTimeout) shouldBe Right(0)
-        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(8)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(8)
+        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(8), queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(8)
       }
 
       "accept null values" in {
         Await.result(connector.delete(tableName, nullValueDeleteCriterion), awaitTimeout) shouldBe Right(2)
-        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(6)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(6)
-        Await.result(connector.simpleSelect(simpleNullSelect), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(0)
+        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(6), queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(6)
+        Await.result(connector.simpleSelect(simpleNullSelect, queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(0)
       }
     }
   }

@@ -28,6 +28,7 @@ trait UpdateItSpec extends WordSpecLike with Matchers with BeforeAndAfterEach wi
   val tableName = s"update_tables_table_$uuid"
 
   val awaitTimeout = 5.seconds
+  val queryTimeout = 5.seconds
 
   override def beforeEach(): Unit = {
     initDb()
@@ -58,7 +59,7 @@ trait UpdateItSpec extends WordSpecLike with Matchers with BeforeAndAfterEach wi
           ))
 
         Await.result(connector.update(tableName, updateData), awaitTimeout) shouldBe Right(2)
-        Await.result(connector.simpleSelect(simpleSelect), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2+1)
+        Await.result(connector.simpleSelect(simpleSelect, queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2+1)
       }
 
       "update successfully more definition" in {
@@ -83,9 +84,9 @@ trait UpdateItSpec extends WordSpecLike with Matchers with BeforeAndAfterEach wi
         )
 
         Await.result(connector.update(tableName, updateData), awaitTimeout) shouldBe Right(7)
-        Await.result(connector.simpleSelect(simpleSelectT), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2+1)
-        Await.result(connector.simpleSelect(simpleSelectF), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(3+1)
-        Await.result(connector.simpleSelect(simpleSelectN), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2+1)
+        Await.result(connector.simpleSelect(simpleSelectT, queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2+1)
+        Await.result(connector.simpleSelect(simpleSelectF, queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(3+1)
+        Await.result(connector.simpleSelect(simpleSelectN, queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2+1)
       }
     }
   }

@@ -46,21 +46,21 @@ class UpdateItSpecSpec extends TestKit(ActorSystem()) with UpdateItSpec with Moc
   when(connector.simpleSelect(SimpleSelect(AllField, TableName(tableName),
     where = Some(
       EqualToValue(FieldName("A2"), Value("800"))
-    )))).thenReturn(Future(Right(Source(List(Seq("A2"), Seq("a"),Seq("s"))))))
+    )), queryTimeout)).thenReturn(Future(Right(Source(List(Seq("A2"), Seq("a"),Seq("s"))))))
 
   when(connector.simpleSelect(SimpleSelect(AllField, TableName(tableName),
     where = Some(
       EqualToValue(FieldName("A2"), Value("801"))
-    )))).thenReturn(Future(Right(Source(List(Seq("A2"), Seq("a"),Seq("s"))))))
+    )), queryTimeout)).thenReturn(Future(Right(Source(List(Seq("A2"), Seq("a"),Seq("s"))))))
 
   when(connector.simpleSelect(SimpleSelect(AllField, TableName(tableName),
     where = Some(
       EqualToValue(FieldName("A2"), Value("802"))
-    )))).thenReturn(Future(Right(Source(List(Seq("A2"), Seq("a"),Seq("s"), Seq("d"))))))
+    )), queryTimeout)).thenReturn(Future(Right(Source(List(Seq("A2"), Seq("a"),Seq("s"), Seq("d"))))))
 
   when(connector.simpleSelect(SimpleSelect(AllField, TableName(tableName),
     where = Some(
       EqualToValue(FieldName("A2"), Value("803"))
-    )))).thenReturn(Future(Right(Source(List(Seq("A2"), Seq("a"),Seq("s"))))))
+    )), queryTimeout)).thenReturn(Future(Right(Source(List(Seq("A2"), Seq("a"),Seq("s"))))))
 
 }

@@ -37,8 +37,8 @@ class ReplaceSpecSpec extends TestKit(ActorSystem()) with ReplaceItSpec with Moc
     .thenReturn(Future.successful(Left(FailedValidation(NonExistingFields(Set("a"))))))
 
 
-  Seq(simpleSelect, simpleSelectF, simpleSelectT, simpleSelectT2).foreach(selectUniqueValueMock(_, connector))
-  Seq(0, 2, 4).foreach(selectExactNumberMock(_, tableName, connector))
+  Seq(simpleSelect, simpleSelectF, simpleSelectT, simpleSelectT2).foreach(selectUniqueValueMock(_, connector, queryTimeout))
+  Seq(0, 2, 4).foreach(selectExactNumberMock(_, tableName, connector, queryTimeout))
 
 
 

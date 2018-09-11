@@ -28,7 +28,7 @@ class SimpleSelectItSpecSpec extends TestKit(ActorSystem()) with SimpleSelectItS
     TestKit.shutdownActorSystem(system)
   }
 
-  when(connector.simpleSelect(SimpleSelect(AllField, TableName(aTableName)))).thenReturn(Future(Right(Source(Seq(
+  when(connector.simpleSelect(SimpleSelect(AllField, TableName(aTableName)), queryTimeout)).thenReturn(Future(Right(Source(Seq(
     Seq("A1", "A2", "A3"),
     Seq("v1", "1", "1"),
     Seq("v3", "3", "1"),
@@ -39,7 +39,7 @@ class SimpleSelectItSpecSpec extends TestKit(ActorSystem()) with SimpleSelectItS
     Seq("v7", null, null)
   ).to[scala.collection.immutable.Seq]))))
 
-  when(connector.simpleSelect(SimpleSelect(AllField, TableName(bTableName)))).thenReturn(Future(Right(Source(Seq(
+  when(connector.simpleSelect(SimpleSelect(AllField, TableName(bTableName)), queryTimeout)).thenReturn(Future(Right(Source(Seq(
     Seq("B1", "B2", "B3", "B4"),
     Seq("b!3", "b@3", "b#3", null),
     Seq("b;2", "b\\2", "b'2", "b=2"),
@@ -47,20 +47,20 @@ class SimpleSelectItSpecSpec extends TestKit(ActorSystem()) with SimpleSelectItS
     Seq("b$4", "b%4", "b 4", null)
   ).to[scala.collection.immutable.Seq]))))
 
-  when(connector.simpleSelect(SimpleSelect(AllField, TableName(cTableName)))).thenReturn(Future(Right(Source(Seq(
+  when(connector.simpleSelect(SimpleSelect(AllField, TableName(cTableName)), queryTimeout)).thenReturn(Future(Right(Source(Seq(
     Seq("C"),
     Seq("c12"),
     Seq("c12"),
     Seq("c3"),
   ).to[scala.collection.immutable.Seq]))))
 
-  when(connector.simpleSelect(SimpleSelect(AllField, TableName(cTableName), distinct = Some(true)))).thenReturn(Future(Right(Source(Seq(
+  when(connector.simpleSelect(SimpleSelect(AllField, TableName(cTableName), distinct = Some(true)), queryTimeout)).thenReturn(Future(Right(Source(Seq(
     Seq("C"),
     Seq("c12"),
     Seq("c3"),
   ).to[scala.collection.immutable.Seq]))))
 
-  when(connector.simpleSelect(SimpleSelect(SpecificFields(Seq(FieldName("A1"), FieldName("A3"))), TableName(aTableName)))).thenReturn(Future(Right(Source(Seq(
+  when(connector.simpleSelect(SimpleSelect(SpecificFields(Seq(FieldName("A1"), FieldName("A3"))), TableName(aTableName)), queryTimeout)).thenReturn(Future(Right(Source(Seq(
     Seq("A1", "A3"),
     Seq("v1", "1"),
     Seq("v2", "0"),
@@ -71,19 +71,19 @@ class SimpleSelectItSpecSpec extends TestKit(ActorSystem()) with SimpleSelectItS
     Seq("v7", null)
   ).to[scala.collection.immutable.Seq]))))
 
-  when(connector.simpleSelect(SimpleSelect(AllField, TableName(aTableName), limit = Some(2)))).thenReturn(Future(Right(Source(Seq(
+  when(connector.simpleSelect(SimpleSelect(AllField, TableName(aTableName), limit = Some(2)), queryTimeout)).thenReturn(Future(Right(Source(Seq(
     Seq("A1", "A2", "A3"),
     Seq("v3", "3", "1"),
     Seq("v4", "-4", "0")
   ).to[scala.collection.immutable.Seq]))))
 
-  when(connector.simpleSelect(SimpleSelect(AllField, TableName(aTableName), where = Some(IsNull(FieldName("A2")))))).thenReturn(Future(Right(Source(Seq(
+  when(connector.simpleSelect(SimpleSelect(AllField, TableName(aTableName), where = Some(IsNull(FieldName("A2")))), queryTimeout)).thenReturn(Future(Right(Source(Seq(
     Seq("A1", "A2", "A3"),
     Seq("v5", null, "0"),
     Seq("v7", null, null)
   ).to[scala.collection.immutable.Seq]))))
 
-  when(connector.simpleSelect(SimpleSelect(AllField, TableName(aTableName), where = Some(NotNull(FieldName("A2")))))).thenReturn(Future(Right(Source(Seq(
+  when(connector.simpleSelect(SimpleSelect(AllField, TableName(aTableName), where = Some(NotNull(FieldName("A2")))), queryTimeout)).thenReturn(Future(Right(Source(Seq(
     Seq("A1", "A2", "A3"),
     Seq("v2", "2", "0"),
     Seq("v4", "-4", "0"),
@@ -93,21 +93,21 @@ class SimpleSelectItSpecSpec extends TestKit(ActorSystem()) with SimpleSelectItS
   ).to[scala.collection.immutable.Seq]))))
 
   when(connector.simpleSelect(SimpleSelect(AllField, TableName(aTableName),
-    where = Some(EqualToValue(FieldName("A1"), Value("v3"))))
+    where = Some(EqualToValue(FieldName("A1"), Value("v3")))), queryTimeout)
+  ).thenReturn(Future(Right(Source(Seq(
+    Seq("A1", "A2", "A3"),
+    Seq("v3", "3", "1")
+  ).to[scala.collection.immutable.Seq]))))
+
+  when(connector.simpleSelect(SimpleSelect(AllField, TableName(aTableName),
+    where = Some(EqualToValue(FieldName("A2"), Value("3")))), queryTimeout
   )).thenReturn(Future(Right(Source(Seq(
     Seq("A1", "A2", "A3"),
     Seq("v3", "3", "1")
   ).to[scala.collection.immutable.Seq]))))
 
   when(connector.simpleSelect(SimpleSelect(AllField, TableName(aTableName),
-    where = Some(EqualToValue(FieldName("A2"), Value("3"))))
-  )).thenReturn(Future(Right(Source(Seq(
-    Seq("A1", "A2", "A3"),
-    Seq("v3", "3", "1")
-  ).to[scala.collection.immutable.Seq]))))
-
-  when(connector.simpleSelect(SimpleSelect(AllField, TableName(aTableName),
-    where = Some(EqualToValue(FieldName("A3"), Value("1"))))
+    where = Some(EqualToValue(FieldName("A3"), Value("1")))), queryTimeout
   )).thenReturn(Future(Right(Source(Seq(
     Seq("A1", "A2", "A3"),
     Seq("v1", "1", "1"),
@@ -119,7 +119,7 @@ class SimpleSelectItSpecSpec extends TestKit(ActorSystem()) with SimpleSelectItS
       EqualToValue(FieldName("A1"), Value("v1")),
       EqualToValue(FieldName("A1"), Value("v2")),
       IsNull(FieldName("A2"))
-    )))))).thenReturn(Future(Right(Source(Seq(
+    )))), queryTimeout)).thenReturn(Future(Right(Source(Seq(
     Seq("A1", "A2", "A3"),
     Seq("v1", "1", "1"),
     Seq("v5", null, "0"),
@@ -131,7 +131,7 @@ class SimpleSelectItSpecSpec extends TestKit(ActorSystem()) with SimpleSelectItS
     where = Some(And(Seq(
       EqualToValue(FieldName("A1"), Value("v7")),
       IsNull(FieldName("A2"))
-    )))))).thenReturn(Future(Right(Source(Seq(
+    )))), queryTimeout)).thenReturn(Future(Right(Source(Seq(
     Seq("A1", "A2", "A3"),
     Seq("v7", null, null)
   ).to[scala.collection.immutable.Seq]))))
@@ -140,7 +140,7 @@ class SimpleSelectItSpecSpec extends TestKit(ActorSystem()) with SimpleSelectItS
     where = Some(And(Seq(
       EqualToValue(FieldName("A1"), Value("v7")),
       NotNull(FieldName("A2"))
-    )))))).thenReturn(Future(Right(Source.empty)))
+    )))), queryTimeout)).thenReturn(Future(Right(Source.empty)))
 
   when(connector.simpleSelect(SimpleSelect(AllField, TableName(aTableName),
     where = Some(Or(Seq(
@@ -149,7 +149,7 @@ class SimpleSelectItSpecSpec extends TestKit(ActorSystem()) with SimpleSelectItS
         IsNull(FieldName("A2")),
         IsNull(FieldName("A3"))
       ))
-    )))))).thenReturn(Future(Right(Source(Seq(
+    )))), queryTimeout)).thenReturn(Future(Right(Source(Seq(
     Seq("A1", "A2", "A3"),
     Seq("v1", "1", "1"),
     Seq("v7", null, null)

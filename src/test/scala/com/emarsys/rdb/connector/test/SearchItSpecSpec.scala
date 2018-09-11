@@ -28,27 +28,27 @@ class SearchItSpecSpec extends TestKit(ActorSystem()) with SearchItSpec with Moc
     TestKit.shutdownActorSystem(system)
   }
 
-  when(connector.search(tableName, Map("z1" -> StringValue("r1")), None)).thenReturn(Future(Right(Source(Seq(
+  when(connector.search(tableName, Map("z1" -> StringValue("r1")), None, queryTimeout)).thenReturn(Future(Right(Source(Seq(
     Seq("Z1", "Z2", "Z3", "Z4"),
     Seq("r1", "1", "1", "s1")
   ).to[scala.collection.immutable.Seq]))))
 
-  when(connector.search(tableName, Map("z2" -> IntValue(2)), None)).thenReturn(Future(Right(Source(Seq(
+  when(connector.search(tableName, Map("z2" -> IntValue(2)), None, queryTimeout)).thenReturn(Future(Right(Source(Seq(
     Seq("Z1", "Z2", "Z3", "Z4"),
     Seq("r2", "2", "0", "s2")
   ).to[scala.collection.immutable.Seq]))))
 
-  when(connector.search(tableName, Map("z3" -> BooleanValue(false)), None)).thenReturn(Future(Right(Source(Seq(
+  when(connector.search(tableName, Map("z3" -> BooleanValue(false)), None, queryTimeout)).thenReturn(Future(Right(Source(Seq(
     Seq("Z1", "Z2", "Z3", "Z4"),
     Seq("r2", "2", "0", "s2")
   ).to[scala.collection.immutable.Seq]))))
 
-  when(connector.search(tableName, Map("z3" -> NullValue), None)).thenReturn(Future(Right(Source(Seq(
+  when(connector.search(tableName, Map("z3" -> NullValue), None, queryTimeout)).thenReturn(Future(Right(Source(Seq(
     Seq("Z1", "Z2", "Z3", "Z4"),
     Seq("r3", "3", null, "s3")
   ).to[scala.collection.immutable.Seq]))))
 
-  when(connector.search(tableName, Map("z2" -> IntValue(45)), None)).thenReturn(Future(Right(Source(Seq(
+  when(connector.search(tableName, Map("z2" -> IntValue(45)), None, queryTimeout)).thenReturn(Future(Right(Source(Seq(
     Seq("Z1", "Z2", "Z3", "Z4"),
     Seq("r4", "45", "1", "s4"),
     Seq("r5", "45", "1", "s5")

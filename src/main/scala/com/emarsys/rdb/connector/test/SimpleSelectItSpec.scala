@@ -56,6 +56,7 @@ trait SimpleSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterA
   val connector: Connector
 
   val awaitTimeout = 5.seconds
+  val queryTimeout = 5.seconds
 
   implicit val materializer: Materializer
 
@@ -80,7 +81,7 @@ trait SimpleSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterA
   }
 
   def getSimpleSelectResult(simpleSelect: SimpleSelect): Seq[Seq[String]] = {
-    val resultE = Await.result(connector.simpleSelect(simpleSelect), awaitTimeout)
+    val resultE = Await.result(connector.simpleSelect(simpleSelect, queryTimeout), awaitTimeout)
 
     resultE shouldBe a[Right[_, _]]
     val resultStream: Source[Seq[String], NotUsed] = resultE.right.get

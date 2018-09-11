@@ -23,6 +23,7 @@ trait InsertItSpec extends WordSpecLike with Matchers with BeforeAndAfterEach wi
   val tableName = s"insert_tables_table_$uuid"
 
   val awaitTimeout = 5.seconds
+  val queryTimeout = 5.seconds
 
   override def beforeEach(): Unit = {
     initDb()
@@ -94,34 +95,34 @@ trait InsertItSpec extends WordSpecLike with Matchers with BeforeAndAfterEach wi
 
       "insert successfully zero record" in {
         Await.result(connector.insertIgnore(tableName, Seq.empty), awaitTimeout) shouldBe Right(0)
-        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(8)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(8)
+        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(8), queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(8)
       }
 
       "insert successfully one record" in {
         Await.result(connector.insertIgnore(tableName, insertSingleData), awaitTimeout) shouldBe Right(1)
-        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(9)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(9)
-        Await.result(connector.simpleSelect(simpleSelectOneRecord), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
+        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(9), queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(9)
+        Await.result(connector.simpleSelect(simpleSelectOneRecord, queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
       }
 
       "insert successfully more records" in {
         Await.result(connector.insertIgnore(tableName, insertMultipleData), awaitTimeout) shouldBe Right(3)
-        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(11)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(11)
-        Await.result(connector.simpleSelect(simpleSelectT), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
-        Await.result(connector.simpleSelect(simpleSelectF), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
-        Await.result(connector.simpleSelect(simpleSelectT2), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
+        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(11), queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(11)
+        Await.result(connector.simpleSelect(simpleSelectT, queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
+        Await.result(connector.simpleSelect(simpleSelectF, queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
+        Await.result(connector.simpleSelect(simpleSelectT2, queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
 
       }
 
       "successfully insert NULL values" in {
         Await.result(connector.insertIgnore(tableName, insertNullData), awaitTimeout) shouldBe Right(1)
-        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(9)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(9)
-        Await.result(connector.simpleSelect(simpleSelectN), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
+        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(9), queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(9)
+        Await.result(connector.simpleSelect(simpleSelectN, queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(2)
       }
 
       "successfully insert if all compulsory fields are defined, fill undefined values with NULL" in {
         Await.result(connector.insertIgnore(tableName, insertFieldDataWithMissingFields), awaitTimeout) shouldBe Right(2)
-        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(10)), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(10)
-        Await.result(connector.simpleSelect(simpleSelectIsNull), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(5)
+        Await.result(connector.simpleSelect(simpleSelectAllWithExpectedResultSize(10), queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(10)
+        Await.result(connector.simpleSelect(simpleSelectIsNull, queryTimeout), awaitTimeout).map(stream => Await.result(stream.runWith(Sink.seq), awaitTimeout).size) shouldBe Right(5)
 
       }
     }
