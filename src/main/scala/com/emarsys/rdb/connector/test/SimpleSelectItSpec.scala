@@ -73,20 +73,8 @@ trait SimpleSelectItSpec extends WordSpecLike with Matchers with BeforeAndAfterA
 
   def cleanUpDb(): Unit
 
-
-  def checkResultWithoutRowOrder(result: Seq[Seq[String]], expected: Seq[Seq[String]]): Unit = new Ordering.ExtraImplicits {
-    result.size shouldEqual expected.size
-    result.head.map(_.toUpperCase) shouldEqual expected.head.map(_.toUpperCase)
-    result.tail.sorted shouldEqual expected.tail.sorted
-  }
-
   def getSimpleSelectResult(simpleSelect: SimpleSelect): Seq[Seq[String]] = {
-    val resultE = Await.result(connector.simpleSelect(simpleSelect, queryTimeout), awaitTimeout)
-
-    resultE shouldBe a[Right[_, _]]
-    val resultStream: Source[Seq[String], NotUsed] = resultE.right.get
-
-    Await.result(resultStream.runWith(Sink.seq), awaitTimeout)
+    getConnectorResult(connector.simpleSelect(simpleSelect, queryTimeout), awaitTimeout)
   }
 
   private val headerLineSize = 1

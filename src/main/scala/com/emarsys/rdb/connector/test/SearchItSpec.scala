@@ -57,28 +57,13 @@ trait SearchItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
   def cleanUpDb(): Unit
 
 
-  def checkResultWithoutRowOrder(result: Seq[Seq[String]], expected: Seq[Seq[String]]): Unit = new Ordering.ExtraImplicits {
-    result.size shouldEqual expected.size
-    result.head.map(_.toUpperCase) shouldEqual expected.head.map(_.toUpperCase)
-    result.tail.sorted shouldEqual expected.tail.sorted
-  }
-
-  def getResult(resultF : ConnectorResponse[Source[Seq[String], NotUsed]]): Seq[Seq[String]] = {
-    val resultE = Await.result(resultF, awaitTimeout)
-
-    resultE shouldBe a[Right[_, _]]
-    val resultStream: Source[Seq[String], NotUsed] = resultE.right.get
-
-    Await.result(resultStream.runWith(Sink.seq), awaitTimeout)
-  }
-
   private val headerLineSize = 1
 
   s"SearchItSpec $uuid" when {
 
     "#search" should {
       "find by string" in {
-        val result = getResult(connector.search(tableName, Map("z1" -> StringValue("r1")), None, queryTimeout))
+        val result = getConnectorResult(connector.search(tableName, Map("z1" -> StringValue("r1")), None, queryTimeout), awaitTimeout)
 
         checkResultWithoutRowOrder(result, Seq(
           Seq("Z1", "Z2", "Z3", "Z4"),
@@ -87,7 +72,7 @@ trait SearchItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
       }
 
       "find by int" in {
-        val result = getResult(connector.search(tableName, Map("z2" -> IntValue(2)), None, queryTimeout))
+        val result = getConnectorResult(connector.search(tableName, Map("z2" -> IntValue(2)), None, queryTimeout), awaitTimeout)
 
         checkResultWithoutRowOrder(result, Seq(
           Seq("Z1", "Z2", "Z3", "Z4"),
@@ -96,7 +81,7 @@ trait SearchItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
       }
 
       "find by boolean" in {
-        val result = getResult(connector.search(tableName, Map("z3" -> BooleanValue(false)), None, queryTimeout))
+        val result = getConnectorResult(connector.search(tableName, Map("z3" -> BooleanValue(false)), None, queryTimeout), awaitTimeout)
 
         checkResultWithoutRowOrder(result, Seq(
           Seq("Z1", "Z2", "Z3", "Z4"),
@@ -105,7 +90,7 @@ trait SearchItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
       }
 
       "find by null" in {
-        val result = getResult(connector.search(tableName, Map("z3" -> NullValue), None, queryTimeout))
+        val result = getConnectorResult(connector.search(tableName, Map("z3" -> NullValue), None, queryTimeout), awaitTimeout)
 
         checkResultWithoutRowOrder(result, Seq(
           Seq("Z1", "Z2", "Z3", "Z4"),
@@ -114,7 +99,7 @@ trait SearchItSpec extends WordSpecLike with Matchers with BeforeAndAfterAll {
       }
 
       "find by int multiple line" in {
-        val result = getResult(connector.search(tableName, Map("z2" -> IntValue(45)), None, queryTimeout))
+        val result = getConnectorResult(connector.search(tableName, Map("z2" -> IntValue(45)), None, queryTimeout), awaitTimeout)
 
         checkResultWithoutRowOrder(result, Seq(
           Seq("Z1", "Z2", "Z3", "Z4"),
