@@ -68,8 +68,8 @@ trait SelectWithGroupLimitItSpec extends WordSpecLike with Matchers with BeforeA
         ))))
 
       val result = getConnectorResult(connector.selectWithGroupLimit(simpleSelect, 2, queryTimeout), awaitTimeout)
-      result.head.map(_.toUpperCase) shouldBe Seq("ID", "NAME", "DATA")
       result.size shouldBe 3
+      result.head.map(_.toUpperCase) shouldBe Seq("ID", "NAME", "DATA")
       result.tail.foreach(_(0) shouldBe  "1")
       result.tail.foreach(_(1) shouldBe  "test1")
     }
@@ -96,8 +96,8 @@ trait SelectWithGroupLimitItSpec extends WordSpecLike with Matchers with BeforeA
         ))))
 
       val result = getConnectorResult(connector.selectWithGroupLimit(simpleSelect, 2, queryTimeout), awaitTimeout)
-      result.head.map(_.toUpperCase) shouldBe Seq("ID", "NAME", "DATA")
       result.size shouldBe 6
+      result.head.map(_.toUpperCase) shouldBe Seq("ID", "NAME", "DATA")
       val grouped = result.tail.groupBy(s => (s(0), s(1)))
       grouped.size shouldBe 3
       grouped.keys.toSet shouldBe Set(("1", "test1"), ("2", "test2"), ("2", "test3"))
