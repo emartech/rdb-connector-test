@@ -116,7 +116,7 @@ trait SelectWithGroupLimitItSpec extends WordSpecLike with Matchers with BeforeA
         ))))
       val result = Await.result(connector.selectWithGroupLimit(simpleSelect, 2, queryTimeout), awaitTimeout)
       result shouldBe a [Left[_,_]]
-      result.left.get shouldBe SimpleSelectIsNotGroupableFormat
+      result.left.get shouldBe SimpleSelectIsNotGroupableFormat(simpleSelect.toString)
     }
 
     "gets a good OR query but no results" in {
